@@ -5,6 +5,6 @@ def printCodeTable(type: str):
             print(f"table of {type}")
             for key, value in table.items():
                 print(f"{key} - {value}")
-
+            return table
         return wrapped
     return wrapper
