@@ -17,19 +17,18 @@ def freq(msg: str):
             lst[j + 1] = lst[j]
             j -= 1
         lst[j + 1] = elem
-    
+
     cnt = 0
     
     for i in range(len(lst)):
         char, frequency = lst[i]
         table[char] = (frequency, (round(cnt, 5), round(cnt + frequency, 4)))
+        print(char, frequency)
         cnt += frequency
 
     return table
-
-
-@table.printCodeTable("uniform code")
-def uniform_code(string: str):
+    
+def uniform_code(string: str) -> int:
     table = {}
     chars = list(set(string))
     chars.sort()
@@ -39,9 +38,17 @@ def uniform_code(string: str):
         binary_code = format(cnt, f'0{size}b')
         table[ch] = binary_code
 
-    return table
+    for key, value in table:
+        print(f"{key} - {value}")
 
-def ariph_code(string: str) -> tuple[int, int]:
+    msg: str = ""
+    for ch in string:
+        msg += table[ch]
+
+    return msg
+
+
+def ariph_code(string: str) -> str:
     freq_table = freq(string)
 
     left, right = 0, 1
@@ -53,8 +60,13 @@ def ariph_code(string: str) -> tuple[int, int]:
 
         print(f"{ch}: {left} - {right}") # comment if you dont need table of codes
 
-    size = round(math.log2(1 / (right - left)))
+    size: int = 0
+    if(right - left == 0):
+        raise BaseException("error")
+    else:
+        size = round(math.log2(1 / (right - left)))
+
     result: str = bin(int(right * 2 ** size))[2:]
-    print((size - len(result)) * "0" + result)
+    result = (size - len(result)) * "0" + result
     
-    return (left, right)
+    return result
