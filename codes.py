@@ -1,7 +1,8 @@
 import math
-import table
 from collections import defaultdict
 from decimal import Decimal, getcontext
+
+getcontext().prec = 256
 
 def save_table(table) -> None:
     with open(input("please insert table name(with extension):\n"), "w+") as file:
@@ -10,25 +11,21 @@ def save_table(table) -> None:
         
 
 def freq(msg: str):
-    table = defaultdict(float)
+    total_count = len(msg)
+    freq = {}
+    for ch in msg:
+        freq[ch] = freq.get(ch, 0) + 1
 
-    for char in msg:
-        table[char] += 1
-
-    total_chars = len(msg)
-    freq_list = [[char, Decimal(count) / Decimal(total_chars)] for char, count in table.items()]
-    
-    freq_list.sort(key=lambda x: x[1], reverse=True)
-
-    cnt = Decimal(0)
+    cumulative_prob = Decimal(0)
     freq_table = {}
 
     print("\nfrequency table\n")
-    for char, frequency in freq_list:
-        freq_table[char] = (frequency, (cnt, cnt + frequency))
-        print(f"{char}: {frequency}")
-        cnt += frequency
-    print("\n\n")
+    for ch, count in sorted(freq.items()):
+        probability = Decimal(count) / Decimal(total_count)
+        freq_table[ch] = (probability, (cumulative_prob, cumulative_prob + probability))
+        print(f"{ch} - {probability:.8f}") 
+        cumulative_prob += probability
+    print("\n")
 
     return freq_table
 
@@ -107,7 +104,7 @@ def arithmetic_encode(string: str):
         range_ = right - left
         right = left + range_ * high
         left = left + range_ * low
-        print(f"{ch}: {left} - {right}")
+        print(f"{ch}: {left:.30f} - {right:.30f}")
 
     if right - left == 0:
         raise ValueError("Range is zero, indicating an error in encoding.")
