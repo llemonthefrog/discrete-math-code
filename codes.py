@@ -23,11 +23,12 @@ def freq(msg: str):
     cnt = Decimal(0)
     freq_table = {}
 
-    print("frequency table")
+    print("\nfrequency table\n")
     for char, frequency in freq_list:
         freq_table[char] = (frequency, (cnt, cnt + frequency))
         print(f"{char}: {frequency}")
         cnt += frequency
+    print("\n\n")
 
     return freq_table
 
