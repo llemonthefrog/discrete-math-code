@@ -6,15 +6,12 @@ from decimal import Decimal, getcontext
 def freq(msg: str):
     table = defaultdict(float)
 
-    # Подсчет частоты символов
     for char in msg:
         table[char] += 1
-    
-    # Преобразование в список и расчет относительных частот
+
     total_chars = len(msg)
     freq_list = [[char, Decimal(count) / Decimal(total_chars)] for char, count in table.items()]
     
-    # Сортировка по частоте (по убыванию)
     freq_list.sort(key=lambda x: x[1], reverse=True)
 
     cnt = Decimal(0)
@@ -28,6 +25,44 @@ def freq(msg: str):
 
 def char_size(size: int) -> int:
     return math.ceil(math.log2(size))
+
+def encode_from_table(msg: str) -> None:
+    result: str = ""
+    table = {}
+    if(input("create from file? [y or n]\n") == "y"):
+        with open(input("write file name:\n"), "r+") as file:
+            table = {}
+            for i, st in enumerate(file.readlines()):
+                parsed = st.split(" ")
+                if(len(parsed) != 2):
+                    raise BaseException(f"not pair in line: {i}")
+                
+                if(len(parsed[0]) != 1):
+                    raise BaseException(f"not a char in line: {i}")
+
+                table[parsed[0]] = parsed[1][:len(parsed[1]) - 1]
+            
+    else:
+        buf: str = ""
+        table = {}
+        while(True):
+            buf = input("insert character: \n")
+
+            if(buf == "exit"):
+                break
+            if(len(buf) > 1):
+                print("incorrect type of char")
+            else:
+                table[buf] = input("insert code: \n")
+
+        
+    for ch in msg:
+        if ch not in table.keys():
+            raise BaseException(f"key not in table: {ch}")
+        
+        result = result + " " + table[ch]
+
+    return result
     
 def uniform_code(string: str) -> int:
     table = {}
@@ -44,7 +79,7 @@ def uniform_code(string: str) -> int:
 
     msg: str = ""
     for ch in string:
-        msg += table[ch]
+        msg = msg + " " + table[ch]
 
     return msg
 
