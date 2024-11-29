@@ -3,6 +3,12 @@ import table
 from collections import defaultdict
 from decimal import Decimal, getcontext
 
+def save_table(table) -> None:
+    with open(input("please insert table name(with extension):\n"), "w+") as file:
+        for key, value in table.items():
+            file.write(f"{key} {value}\n")
+        
+
 def freq(msg: str):
     table = defaultdict(float)
 
@@ -17,8 +23,10 @@ def freq(msg: str):
     cnt = Decimal(0)
     freq_table = {}
 
+    print("frequency table")
     for char, frequency in freq_list:
         freq_table[char] = (frequency, (cnt, cnt + frequency))
+        print(f"{char}: {frequency}")
         cnt += frequency
 
     return freq_table
@@ -81,30 +89,30 @@ def uniform_code(string: str) -> int:
     for ch in string:
         msg = msg + " " + table[ch]
 
+    if(input("do you want to save encoding table? [y or n]\n") == "y"):
+        save_table(table)
+
     return msg
 
 
-def ariph_code(string: str) -> str:
+def arithmetic_encode(string: str):
     freq_table = freq(string)
 
     left = Decimal(0)
     right = Decimal(1)
     
     for ch in string:
-        frequency, (l, r) = freq_table[ch]
-        low, high = (l, r)
-        right = left + (right - left) * high
-        left = left + (right - left) * low
+        frequency, (low, high) = freq_table[ch]
+        range_ = right - left
+        right = left + range_ * high
+        left = left + range_ * low
+        print(f"{ch}: {left} - {right}")
 
-        print(f"{ch}: {left} - {right}")  # delete if you dont need debug
-
-    size: int = 0
     if right - left == 0:
-        raise BaseException("error")
-    else:
-        size = round(math.log2(1 / (right - left)))
+        raise ValueError("Range is zero, indicating an error in encoding.")
 
-    result: str = bin(int(right * Decimal(2) ** size))[2:]
+    size = round(math.log2(1 / (right - left)))
+    result = bin(int(right * Decimal(2) ** size))[2:]
     result = (size - len(result)) * "0" + result
-    
+
     return result

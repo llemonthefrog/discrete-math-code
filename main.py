@@ -2,7 +2,7 @@ import codes
 
 types_of_coding = {
                    "uni" : codes.uniform_code,
-                   "ariph" : codes.ariph_code,
+                   "arith" : codes.arithmetic_encode,
                    "encode from table" : codes.encode_from_table,
                 }
 
@@ -23,7 +23,4 @@ if __name__ == "__main__":
     if result == None:
         raise BaseException("result cant be a none type")
 
-    if t != "uni":
-        print(f"result: {result}\nshr: {len(types_of_coding["uni"](msg))/len(result)}")
-    else:
-        print(f"result: {result}")
+    print(f"result: {result}")
