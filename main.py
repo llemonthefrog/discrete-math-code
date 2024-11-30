@@ -24,3 +24,6 @@ if __name__ == "__main__":
         raise BaseException("result cant be a none type")
 
     print(f"result: {result}")
+
+    if(input("encode with Hamming? [y or n]:\n") == "y"):
+        print(codes.haming_encode(result))

@@ -114,3 +114,30 @@ def arithmetic_encode(string: str):
     result = (size - len(result)) * "0" + result
 
     return result
+
+def haming_encode(data_bits: str):
+    data_bits = [int(bit) for bit in data_bits]
+    m = len(data_bits) 
+
+    r = 0
+    while (2**r < m + r + 1):
+        r += 1
+    
+    total_bits = m + r
+    encoded_bits = [0] * total_bits
+
+    j = 0
+    for i in range(1, total_bits + 1):
+        if (i & (i - 1)) != 0:
+            encoded_bits[i - 1] = data_bits[j]
+            j += 1
+
+    for i in range(r):
+        parity_index = (2**i) - 1 
+        parity_value = 0
+        for j in range(parity_index, total_bits, 2**(i+1)):
+            parity_value ^= sum(encoded_bits[j:j + 2**i])
+        
+        encoded_bits[parity_index] = parity_value % 2  
+    
+    return ''.join(map(str, encoded_bits))
